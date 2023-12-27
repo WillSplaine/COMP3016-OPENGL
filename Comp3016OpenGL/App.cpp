@@ -58,6 +58,9 @@ void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void updateCameraVectors();
 
+bool isInsideCube(const glm::vec3& point);
+
+
 int main() {
     if (!glfwInit()) {
         std::cerr << "GLFW initialization failed\n";
@@ -171,6 +174,7 @@ int main() {
  -0.5f,  0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 23, purple color
   0.5f,  0.5f, -0.5f, 0.6f, 0.3f, 0.8f  // Vertex 24, purple color
 
+
     };
 
     // Cube indices for EBO (Element Buffer Object)
@@ -269,19 +273,46 @@ void processInput(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    float cameraSpeed = 2.5f * deltaTime;
+    float baseCameraSpeed = 2.25f;
+    float modifiedCameraSpeed = baseCameraSpeed * deltaTime / 3.0f;
+
+    glm::vec3 newCameraPos = cameraPos;  // Store the new position for collision detection
+
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        cameraPos += cameraSpeed * cameraFront;
+        newCameraPos += modifiedCameraSpeed * cameraFront;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        cameraPos -= cameraSpeed * cameraFront;
+        newCameraPos -= modifiedCameraSpeed * cameraFront;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        newCameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * modifiedCameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        newCameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * modifiedCameraSpeed;
+
+    // Check if the new position is inside the cube
+    if (!isInsideCube(newCameraPos)) {
+        // Update the camera position only if it's not inside the cube
+        cameraPos = newCameraPos;
+    }
 
     // Ensure the camera stays at the same height
     cameraPos.y = 0.0f;
 }
+
+bool isInsideCube(const glm::vec3& point) {
+    // Define the cube boundaries with a buffer zone
+    float buffer = -0.3;  // Adjust the buffer zone as needed
+    float cubeMinX = -0.5f - buffer;
+    float cubeMaxX = 0.5f + buffer;
+    float cubeMinY = -0.5f - buffer;
+    float cubeMaxY = 0.5f + buffer;
+    float cubeMinZ = -0.5f - buffer;
+    float cubeMaxZ = 0.5f + buffer;
+
+    // Check if the point is inside the cube
+    return (point.x >= cubeMinX && point.x <= cubeMaxX &&
+        point.y >= cubeMinY && point.y <= cubeMaxY &&
+        point.z >= cubeMinZ && point.z <= cubeMaxZ);
+}
+
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     if (firstMouse) {

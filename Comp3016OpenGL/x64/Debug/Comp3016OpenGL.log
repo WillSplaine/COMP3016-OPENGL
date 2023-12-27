@@ -1,5 +1,6 @@
 ﻿  App.cpp
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(226,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(293,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(294,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Comp3016OpenGL.vcxproj -> S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\x64\Debug\Comp3016OpenGL.exe
+D:\3016-70\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(230,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\3016-70\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(302,18): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\3016-70\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(324,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\3016-70\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(325,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Comp3016OpenGL.vcxproj -> D:\3016-70\COMP3016-OPENGL\Comp3016OpenGL\x64\Debug\Comp3016OpenGL.exe
