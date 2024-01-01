@@ -1,6 +1,17 @@
 ﻿  App.cpp
-D:\3016-70\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(230,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\3016-70\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(302,18): warning C4305: 'initializing': truncation from 'double' to 'float'
-D:\3016-70\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(324,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\3016-70\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(325,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Comp3016OpenGL.vcxproj -> D:\3016-70\COMP3016-OPENGL\Comp3016OpenGL\x64\Debug\Comp3016OpenGL.exe
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(411,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(435,48): warning C4305: 'argument': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(454,48): warning C4305: 'argument': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(404,15): warning C4101: 'secondModel': unreferenced local variable
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(66,15): warning C4101: 'modelPyramid': unreferenced local variable
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(533,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\App.cpp(534,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Comp3016OpenGL.vcxproj -> S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\x64\Debug\Comp3016OpenGL.exe

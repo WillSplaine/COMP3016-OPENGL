@@ -8,9 +8,9 @@
 const char* vertexShaderSource = R"(
     #version 330 core
     layout (location = 0) in vec3 aPos;
-    layout (location = 1) in vec3 aColor; // New vertex attribute for color
+    layout (location = 1) in vec3 aColor;
 
-    out vec4 vertexColor; // New varying variable
+    out vec4 vertexColor;
 
     uniform mat4 model;
     uniform mat4 view;
@@ -19,7 +19,7 @@ const char* vertexShaderSource = R"(
     void main()
     {
         gl_Position = projection * view * model * vec4(aPos, 1.0);
-        vertexColor = vec4(aColor, 1.0); // Pass the color to the fragment shader
+        vertexColor = vec4(aColor, 1.0);
     }
 )";
 
@@ -33,7 +33,6 @@ const char* fragmentShaderSource = R"(
         FragColor = vertexColor;
     }
 )";
-
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
@@ -53,6 +52,9 @@ bool firstMouse = true;
 
 GLFWwindow* window;
 GLuint shaderProgram;
+GLuint pyramidShaderProgram;
+
+
 
 void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -60,8 +62,9 @@ void updateCameraVectors();
 
 bool isInsideCube(const glm::vec3& point);
 
-
 int main() {
+    glm::mat4 modelPyramid;       
+
     if (!glfwInit()) {
         std::cerr << "GLFW initialization failed\n";
         return -1;
@@ -132,49 +135,49 @@ int main() {
         return -1;
     }
 
+
+    
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
-
+ 
+    cameraPos = glm::vec3(0.0f, 0.0f, 0.9f);
     // Cube vertices with colors
     float cubeVertices[] = {
-
         // Front face
--0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 1, purple color
- 0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 2, purple color
- 0.5f,  0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 3, purple color
--0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Vertex 4, green color
+        -0.5f, -2.0f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 1, purple color
+         0.5f, -2.0f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 2, purple color
+         0.5f, -0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 3, purple color
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 4, green color
 
-// Left face
--0.5f, -0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 5, purple color
--0.5f, -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Vertex 6, green color
--0.5f,  0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 7, purple color
--0.5f,  0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 8, purple color
+        // Left face
+        -0.5f, -2.0f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 5, purple color
+        -0.5f, -2.0f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 6, green color
+        -0.5f, -0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 7, purple color
+        -0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 8, purple color
 
-// Right face
- 0.5f, -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Vertex 9, green color
- 0.5f, -0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 10, purple color
- 0.5f,  0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 11, purple color
- 0.5f,  0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 12, purple color
+        // Right face
+         0.5f, -2.0f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 9, green color
+         0.5f, -2.0f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 10, purple color
+         0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 11, purple color
+         0.5f, -0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 12, purple color
 
- // Top face
- -0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Vertex 13, purple color
-  0.5f,  0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 14, purple color
-  0.5f,  0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 15, purple color
- -0.5f,  0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 16, purple color
+         // Top face
+         -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 13, green color
+          0.5f, -0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 14, purple color
+          0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 15, purple color
+         -0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 16, purple color
 
- // Bottom face
- -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 17, purple color
-  0.5f, -0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 18, purple color
-  0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 19, purple color
- -0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 20, purple color
+         // Bottom face
+         -10, -2,  10, 0.0f, 1.0f, 0.0f, // Vertex 17, green color
+          10, -2,  10, 0.6f, 0.3f, 0.8f, // Vertex 18, purple color
+          10, -2.0f, -10, 0.6f, 0.3f, 0.8f, // Vertex 19, purple color
+         -10, -2.0f, -10, 0.6f, 0.3f, 0.8f, // Vertex 20, purple color
 
- // Back face
-  0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 21, purple color
- -0.5f, -0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 22, purple color
- -0.5f,  0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 23, purple color
-  0.5f,  0.5f, -0.5f, 0.6f, 0.3f, 0.8f  // Vertex 24, purple color
-
-
+         // Back face
+          0.5f, -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Vertex 21, green color
+         -0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 22, purple color
+         -0.5f, -2.0f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 23, purple color
+          0.5f, -2.0f,  0.3f, 0.6f, 0.3f, 0.8f  // Vertex 24, purple color
     };
 
     // Cube indices for EBO (Element Buffer Object)
@@ -198,6 +201,134 @@ int main() {
         22, 23, 20
     };
 
+    float secondCubeVertices[] = {
+        // Front face
+   -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, // Vertex 1, yellow color
+    0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, // Vertex 2, yellow color
+    0.5f, 1.0f, -0.5f, 1.0f, 1.0f, 0.0f, // Vertex 3, yellow color
+   -0.5f, 1.0f, -0.5f, 1.0f, 1.0f, 0.0f, // Vertex 4, yellow color
+
+   // Left face
+   -0.5f, 0.5f,  0.5f, 1.0f, 1.0f, 0.0f, // Vertex 5, yellow color
+   -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, // Vertex 6, yellow color
+   -0.5f, 1.0f, -0.5f, 1.0f, 1.0f, 0.0f, // Vertex 7, yellow color
+   -0.5f, 1.0f,  0.5f, 1.0f, 1.0f, 0.0f, // Vertex 8, yellow color
+
+   // Right face
+    0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, // Vertex 9, yellow color
+    0.5f, 0.5f,  0.5f, 1.0f, 1.0f, 0.0f, // Vertex 10, yellow color
+    0.5f, 1.0f,  0.5f, 1.0f, 1.0f, 0.0f, // Vertex 11, yellow color
+    0.5f, 1.0f, -0.5f, 1.0f, 1.0f, 0.0f, // Vertex 12, yellow color
+
+    // Top face
+    -0.5f, 1.0f, -0.5f, 1.0f, 1.0f, 0.0f, // Vertex 13, yellow color
+     0.5f, 1.0f, -0.5f, 1.0f, 1.0f, 0.0f, // Vertex 14, yellow color
+     0.5f, 1.0f,  0.5f, 1.0f, 1.0f, 0.0f, // Vertex 15, yellow color
+    -0.5f, 1.0f,  0.5f, 1.0f, 1.0f, 0.0f, // Vertex 16, yellow color
+
+    // Bottom face
+    -0.5f, 0.5f,  0.5f, 1.0f, 1.0f, 0.0f, // Vertex 17, yellow color
+     0.5f, 0.5f,  0.5f, 1.0f, 1.0f, 0.0f, // Vertex 18, yellow color
+     0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, // Vertex 19, yellow color
+    -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, // Vertex 20, yellow color
+
+    // Back face
+     0.5f, 1.0f,  0.5f, 1.0f, 1.0f, 0.0f, // Vertex 21, yellow color
+    -0.5f, 1.0f,  0.5f, 1.0f, 1.0f, 0.0f, // Vertex 22, yellow color
+    -0.5f, 0.5f,  0.5f, 1.0f, 1.0f, 0.0f, // Vertex 23, yellow color
+     0.5f, 0.5f,  0.3f, 1.0f, 1.0f, 0.0f  // Vertex 24, yellow color
+    
+    };
+
+    unsigned int secondCubeIndices[] = {
+        // Front face
+    0, 1, 2,
+    2, 3, 0,
+
+    // Left face
+    4, 5, 6,
+    6, 7, 4,
+
+    // Right face
+    8, 9, 10,
+    10, 11, 8,
+
+    // Top face
+    12, 13, 14,
+    14, 15, 12,
+
+    // Bottom face
+    16, 17, 18,
+    18, 19, 16,
+
+    // Back face
+    20, 21, 22,
+    22, 23, 20
+    
+
+    };
+
+    float wallVertices[] = {
+        // Front face
+        -0.5f, -2.0f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 1, purple color
+         0.5f, -2.0f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 2, purple color
+         0.5f, -0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 3, purple color
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 4, green color
+
+        // Left face
+        -0.5f, -2.0f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 5, purple color
+        -0.5f, -2.0f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 6, green color
+        -0.5f, -0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 7, purple color
+        -0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 8, purple color
+
+        // Right face
+         0.5f, -2.0f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 9, green color
+         0.5f, -2.0f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 10, purple color
+         0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 11, purple color
+         0.5f, -0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 12, purple color
+
+         // Top face
+         -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 13, green color
+          0.5f, -0.5f, -0.5f, 0.6f, 0.3f, 0.8f, // Vertex 14, purple color
+          0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 15, purple color
+         -0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 16, purple color
+
+         // Bottom face
+         -10, -2,  10, 0.0f, 1.0f, 0.0f, // Vertex 17, green color
+          10, -2,  10, 0.6f, 0.3f, 0.8f, // Vertex 18, purple color
+          10, -2.0f, -10, 0.6f, 0.3f, 0.8f, // Vertex 19, purple color
+         -10, -2.0f, -10, 0.6f, 0.3f, 0.8f, // Vertex 20, purple color
+
+         // Back face
+          0.5f, -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Vertex 21, green color
+         -0.5f, -0.5f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 22, purple color
+         -0.5f, -2.0f,  0.5f, 0.6f, 0.3f, 0.8f, // Vertex 23, purple color
+          0.5f, -2.0f,  0.3f, 0.6f, 0.3f, 0.8f  // Vertex 24, purple color
+    };
+
+    // Cube indices for EBO (Element Buffer Object)
+    unsigned int wallIndices[] = {
+        0, 1, 2,
+        2, 3, 0,
+
+        4, 5, 6,
+        6, 7, 4,
+
+        8, 9, 10,
+        10, 11, 8,
+
+        12, 13, 14,
+        14, 15, 12,
+
+        16, 17, 18,
+        18, 19, 16,
+
+        20, 21, 22,
+        22, 23, 20
+    };
+
+    //podium
+
     GLuint VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -220,8 +351,58 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    //watering can
+
+    GLuint secondVBO, secondVAO, secondEBO;
+    glGenVertexArrays(1, &secondVAO);
+    glGenBuffers(1, &secondVBO);
+    glGenBuffers(1, &secondEBO);
+
+    glBindVertexArray(secondVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, secondVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(secondCubeVertices), secondCubeVertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, secondEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(secondCubeIndices), secondCubeIndices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0); // Position attribute
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); // Color attribute
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    //wall
+
+    GLuint wallVBO, wallVAO, wallEBO;
+    glGenVertexArrays(1, &wallVAO);
+    glGenBuffers(1, &wallVBO);
+    glGenBuffers(1, &wallEBO);
+
+    glBindVertexArray(wallVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, wallVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(wallVertices), wallVertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, secondEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(wallIndices), wallIndices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0); // Position attribute
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); // Color attribute
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    glm::mat4 secondModel;
+
 
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -240,19 +421,39 @@ int main() {
 
         // Update view matrix
         view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-
-        // Update model matrix for cube
-        glm::mat4 model = glm::mat4(0.5f);
-        model = glm::scale(model, glm::vec3(0.15f));  // Scale the cube by half
-        // model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-
-
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view)); 
         // Update projection matrix
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+
+        // Update model matrix for cube
+        glm::mat4 model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.1));  
+        //make cube spin
+        // model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+
+
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+
+       
+
+        float distanceFromCamera = 0.1f; // Adjust this value to bring the cube closer or farther
+        glm::vec3 yellowCubePosition = cameraPos;
+           
+
+        glm::mat4 secondModel = glm::translate(glm::mat4(1.0f), yellowCubePosition);
+        secondModel = glm::rotate(secondModel, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "secondModel"), 1, GL_FALSE, glm::value_ptr(secondModel));
+
+
+        glm::mat4 wall = glm::mat4(1);
+        model = glm::scale(model, glm::vec3(0.1));
+
+        glBindVertexArray(secondVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
@@ -267,6 +468,7 @@ int main() {
 
     glfwTerminate();
     return 0;
+ 
 }
 
 void processInput(GLFWwindow* window) {
@@ -298,20 +500,27 @@ void processInput(GLFWwindow* window) {
 }
 
 bool isInsideCube(const glm::vec3& point) {
-    // Define the cube boundaries with a buffer zone
-    float buffer = -0.3;  // Adjust the buffer zone as needed
-    float cubeMinX = -0.5f - buffer;
-    float cubeMaxX = 0.5f + buffer;
+    // Define the cube boundaries in local space (before any transformations)
+    float buffer = -0.35f;  // Adjust the buffer zone as needed
+    float cubeMinX = -1.5f - buffer;
+    float cubeMaxX = -0.5f + buffer;
     float cubeMinY = -0.5f - buffer;
     float cubeMaxY = 0.5f + buffer;
     float cubeMinZ = -0.5f - buffer;
     float cubeMaxZ = 0.5f + buffer;
 
-    // Check if the point is inside the cube
-    return (point.x >= cubeMinX && point.x <= cubeMaxX &&
-        point.y >= cubeMinY && point.y <= cubeMaxY &&
-        point.z >= cubeMinZ && point.z <= cubeMaxZ);
+    // Get the inverse of the cube's model matrix
+    glm::mat4 inverseModelMatrix = glm::inverse(glm::mat4(1.0f));  // Replace with the actual model matrix of the cube
+
+    // Transform the camera position into local space
+    glm::vec4 localPoint = inverseModelMatrix * glm::vec4(point, 1.0f);
+
+    // Check if the point is inside the transformed cube
+    return (localPoint.x >= cubeMinX && localPoint.x <= cubeMaxX &&
+        localPoint.y >= cubeMinY && localPoint.y <= cubeMaxY &&
+        localPoint.z >= cubeMinZ && localPoint.z <= cubeMaxZ);
 }
+
 
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
