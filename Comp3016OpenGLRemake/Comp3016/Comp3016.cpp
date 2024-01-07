@@ -9,6 +9,8 @@
 #include <Assimp/postprocess.h>
 #include "Shader.h"
 #include "ModelLoader.h"
+#include <vector>
+
 
 
 
@@ -22,12 +24,15 @@ float cameraZoom = 45.0f;
 float yaw = -90.0f;
 float pitch = 0.0f;
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraPos = glm::vec3(0.0f, 2.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 glm::mat4 view;
 glm::mat4 projection;
+
+glm::vec3 lightDirection(-1.0f, -1.0f, -1.0f); // Directional light from the top-left
+glm::vec3 lightAmbient(0.2f, 0.2f, 0.2f);
 
 double lastX = 400, lastY = 300;
 bool firstMouse = true;
@@ -45,8 +50,45 @@ void renderPodium(GLuint& VAO, GLuint& VBO, GLuint& EBO);
 void renderWall(GLuint& wallVAO, GLuint& wallVBO, GLuint& wallEBO);
 void renderCan(GLuint& canVAO, GLuint& canVBO, GLuint& canEBO);
 
-
+bool isOutsideArea(const glm::vec3& point);
 bool isInsideCube(const glm::vec3& point);
+
+bool loadModel(const std::string& filePath, std::vector<GLfloat>& vertices, std::vector<GLfloat>& colors) {
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs);
+
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+        std::cerr << "Assimp Error: " << importer.GetErrorString() << std::endl;
+        return false;
+    }
+
+    const aiMesh* mesh = scene->mMeshes[0]; // Assuming the model has only one mesh
+
+    //increases the size of the 3d model
+    
+   
+    for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+        // Add vertex positions
+        vertices.push_back(mesh->mVertices[i].x);
+        vertices.push_back(mesh->mVertices[i].y);
+        vertices.push_back(mesh->mVertices[i].z);
+
+        // Add vertex colors (assuming the model has colors)
+        if (mesh->HasVertexColors(0)) {
+            vertices.push_back(mesh->mColors[0][i].r);
+            vertices.push_back(mesh->mColors[0][i].g);
+            vertices.push_back(mesh->mColors[0][i].b);
+        }
+        else {
+            // If the model doesn't have colors, you can set a default color here.
+            vertices.push_back(1.0f); // Red
+            vertices.push_back(1.0f); // Green
+            vertices.push_back(1.0f); // Blue
+        }
+    }
+
+    return true;
+}
 
 int main() {
 
@@ -83,22 +125,65 @@ int main() {
         return -1;
     }
 
-    ModelLoader modelLoader;
 
-
-    const char* modelPath1 = "S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\Models\bonsai.blend";
-    const char* modelPath2 = "S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGL\Models\shop.blend";
-
-    const aiScene* scene1 = modelLoader.loadModel(modelPath1);
-    const aiScene* scene2 = modelLoader.loadModel(modelPath2);
-
-    if (!scene1 || !scene2) {
-        // Handle errors
+    std::vector<GLfloat> roomVertices, roomColors;
+    if (!loadModel("S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/shop.obj", roomVertices, roomColors)) {
+        std::cerr << "Failed to load model" << std::endl;
+        glfwTerminate();
         return -1;
     }
+    std::vector<GLfloat> bonsaiVertices, bonsaiColors;
+    if (!loadModel("S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/Bonsai.obj", bonsaiVertices, bonsaiColors)) {
+        std::cerr << "Failed to load model" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+   
+ 
+
+    GLuint shopVAO, shopVBO;
+    glGenVertexArrays(1, &shopVAO);
+    glGenBuffers(1, &shopVBO);
+
+    glBindVertexArray(shopVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, shopVBO);
+    glBufferData(GL_ARRAY_BUFFER, roomVertices.size() * sizeof(GLfloat), roomVertices.data(), GL_STATIC_DRAW);
+
+    // Vertex attribute for position
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+
+    // Vertex attribute for color
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+
+    // Unbind the VAO to prevent accidental changes
+    glBindVertexArray(0);
+
+    GLuint bonsaiVAO, bonsaiVBO;
+    glGenVertexArrays(1, &bonsaiVAO);
+    glGenBuffers(1, &bonsaiVBO);
+
+    glBindVertexArray(bonsaiVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, bonsaiVBO);
+    glBufferData(GL_ARRAY_BUFFER, bonsaiVertices.size() * sizeof(GLfloat), bonsaiVertices.data(), GL_STATIC_DRAW);
+
+    // Vertex attribute for position
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+
+    // Vertex attribute for color
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+
+    // Unbind the VAO to prevent accidental changes
+    glBindVertexArray(0);
 
 
-
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
     glDisable(GL_CULL_FACE);
 
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -145,10 +230,10 @@ int main() {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    cameraPos = glm::vec3(0.0f, 0.0f, 0.9f);
-
-
-
+    cameraPos = glm::vec3(-0.35f, 0.0f, 0.0f);
+    GLuint roomLoc = glGetUniformLocation(shaderProgram, "room");
+    GLuint bonsaiLoc = glGetUniformLocation(shaderProgram, "plant");
+   
     //podium
 
     GLuint VBO, VAO, EBO;
@@ -166,6 +251,8 @@ int main() {
     GLuint wallVBO, wallVAO, wallEBO;
     renderWall(wallVAO, wallVBO, wallEBO);
 
+   
+    
 
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -194,6 +281,9 @@ int main() {
         // Update projection matrix
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
+        glUniform3fv(glGetUniformLocation(shaderProgram, "lightDir"), 1, glm::value_ptr(lightDirection));
+        glUniform3fv(glGetUniformLocation(shaderProgram, "lightAmbient"), 1, glm::value_ptr(lightAmbient));
+
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
@@ -206,9 +296,12 @@ int main() {
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
 
+        glm::mat4 roommodelMatrix = glm::translate(glm::mat4(-1.0f), glm::vec3(1.0f, 2.0f, 1.0f));
+        glm::mat4 plantmodelMatrix = glm::translate(glm::mat4(-1.0f), glm::vec3(2.0f, 1.0f, 2.0f));
+        glm::mat4 bonsaiplantMatrix = glm::translate(glm::mat4(-1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
-
-
+        glUniformMatrix4fv(roomLoc, 1, GL_FALSE, glm::value_ptr(roommodelMatrix));
+        glUniformMatrix4fv(bonsaiLoc, 1, GL_FALSE, glm::value_ptr(plantmodelMatrix));
 
         glBindVertexArray(canVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -230,12 +323,23 @@ int main() {
         glm::mat4 wallModel = glm::mat4(1);
         wallModel = glm::scale(wallModel, glm::vec3(0.1));
         /* glm::mat4 wallModel = glm::mat4(1.0f);  */// Initialize the canModel matrix
-        wallModel = glm::translate(wallModel, glm::vec3(4.0f, 0.0f, 0.0f));
+        wallModel = glm::translate(wallModel, glm::vec3(3.0f, 0.0f, 0.0f));
         wallModel = glm::rotate(wallModel, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "wallModel"), 1, GL_FALSE, glm::value_ptr(wallModel));
 
+
+        glBindVertexArray(bonsaiVAO);
+        glDrawArrays(GL_TRIANGLES, 0, bonsaiVertices.size() / 3);
+        glBindVertexArray(0);
+
+        glBindVertexArray(shopVAO);
+        glDrawArrays(GL_TRIANGLES, 0, roomVertices.size() / 3);
+        glBindVertexArray(0);
+
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        glUseProgram(0);
     }
 
     glDeleteVertexArrays(1, &VAO);
@@ -556,20 +660,20 @@ void processInput(GLFWwindow* window) {
 }
 
 bool isInsideCube(const glm::vec3& point) {
-    // Define the cube boundaries in local space (before any transformations)
-    float buffer = -0.35f;  // Adjust the buffer zone as needed
+    // Defines where the cube is and adds a buffer to prevent clipping)
+    float buffer = -0.35f;  // Adjust the buffer 
     float cubeMinX = -1.5f - buffer;
     float cubeMaxX = -0.5f + buffer;
     float cubeMinY = -0.5f - buffer;
     float cubeMaxY = 0.5f + buffer;
     float cubeMinZ = -0.5f - buffer;
     float cubeMaxZ = 0.5f + buffer;
-
-    // Get the inverse of the cube's model matrix
-    glm::mat4 inverseModelMatrix = glm::inverse(glm::mat4(1.0f));  // Replace with the actual model matrix of the cube
+   
+    
+    glm::mat4 inverseModelMatrix = glm::inverse(glm::mat4(1.0f));  
 
     // Transform the camera position into local space
-    glm::vec4 localPoint = inverseModelMatrix * glm::vec4(point, 1.0f);
+    glm::vec4 localPoint = inverseModelMatrix * glm::vec4(point, 2.0f);
 
     // Check if the point is inside the transformed cube
     return (localPoint.x >= cubeMinX && localPoint.x <= cubeMaxX &&
@@ -577,6 +681,25 @@ bool isInsideCube(const glm::vec3& point) {
         localPoint.z >= cubeMinZ && localPoint.z <= cubeMaxZ);
 }
 
+
+bool isOutsideArea(const glm::vec3& point) {
+    // Define the boundaries of the allowed area
+    float areaMinX = -1;
+    float areaMaxX = 1; /* Set your maximum X value */;
+    float areaMinY = -1/* Set your minimum Y value */;
+    float areaMaxY = 1/* Set your maximum Y value */;
+    float areaMinZ = 1/* Set your minimum Z value */;
+    float areaMaxZ = 1/* Set your maximum Z value */;
+
+    // Transform the point into local space (if needed)
+    glm::mat4 inverseModelMatrix = glm::inverse(glm::mat4(1.0f));
+    glm::vec4 localPoint = inverseModelMatrix * glm::vec4(point, 1.0f);
+
+    // Check if the point is outside the allowed area
+    return (localPoint.x < areaMinX || localPoint.x > areaMaxX ||
+        localPoint.y < areaMinY || localPoint.y > areaMaxY ||
+        localPoint.z < areaMinZ || localPoint.z > areaMaxZ);
+}
 
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
@@ -611,12 +734,11 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 
 void updateCameraVectors() {
-    // Calculate the cameraFront vector without changing vertical position
+    // Calculate the new Front vector
     glm::vec3 front;
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-
     cameraFront = glm::normalize(front);
 }
 

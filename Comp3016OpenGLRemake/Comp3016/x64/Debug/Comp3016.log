@@ -1,27 +1,24 @@
 ﻿  Comp3016.cpp
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(89,30): warning C4129: 'C': unrecognized character escape sequence
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(89,30): warning C4129: 'M': unrecognized character escape sequence
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(90,30): warning C4129: 'C': unrecognized character escape sequence
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(90,30): warning C4129: 'M': unrecognized character escape sequence
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(90,30): warning C4129: 's': unrecognized character escape sequence
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(180,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(204,48): warning C4305: 'argument': truncation from 'double' to 'T'
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(267,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(294,48): warning C4305: 'argument': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(231,56): warning C4305: 'argument': truncation from 'double' to 'T'
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(324,56): warning C4305: 'argument': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(172,15): warning C4101: 'canModel': unreferenced local variable
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(406,22): warning C4101: 'EBO': unreferenced local variable
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(406,12): warning C4101: 'VBO': unreferenced local variable
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(406,17): warning C4101: 'VAO': unreferenced local variable
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(494,22): warning C4101: 'EBO': unreferenced local variable
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(494,12): warning C4101: 'VBO': unreferenced local variable
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(494,17): warning C4101: 'VAO': unreferenced local variable
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(589,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(590,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(332,64): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(336,62): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(259,15): warning C4101: 'canModel': unreferenced local variable
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(510,22): warning C4101: 'EBO': unreferenced local variable
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(510,12): warning C4101: 'VBO': unreferenced local variable
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(510,17): warning C4101: 'VAO': unreferenced local variable
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(598,22): warning C4101: 'EBO': unreferenced local variable
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(598,12): warning C4101: 'VBO': unreferenced local variable
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(598,17): warning C4101: 'VAO': unreferenced local variable
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(712,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\Comp3016.cpp(713,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   Comp3016.vcxproj -> S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\x64\Debug\Comp3016.exe
