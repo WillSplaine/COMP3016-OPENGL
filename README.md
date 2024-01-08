@@ -7,7 +7,7 @@
 ### Run the Project
 #### To run, open the Comp3016Remake.sln found in the GitHub, and run the project.
 
-#### To move around the the use of the W,A,S,D keys will allow you to move in each direation
+#### To move around the the use of the W,A,S,D keys will allow you to move in each direation (W = Forward, A = Left, S = Backwards, D = Right) These movements can be used at the same time to achieve a combination AKA W+A = 45 degrees forward
 #### To look around, the use of the mouse allows the player to look wherever they wish
 #### To zoom in or out, scrolling with the mouses scroll wheel will allow the user to zoom in and out (does have limits)
 
@@ -37,6 +37,7 @@
 ### External Resource
 
 #### In this project the use of learnopengl.com was essential in both learning the correct usage for each element 
+#### This was extremely useful resource as it held all the download links for the libraries I needed
 
 #### Models for bonsai, shop were both designed by myself via the use of the 3D modelling software Blender
 
