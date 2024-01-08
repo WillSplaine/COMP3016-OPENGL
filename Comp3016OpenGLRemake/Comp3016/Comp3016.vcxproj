@@ -112,7 +112,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLFW\include;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLM;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLEW\include;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\Assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLFW\include;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLM;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLEW\include;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\Assimp\include;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

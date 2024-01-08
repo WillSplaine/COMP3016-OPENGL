@@ -11,8 +11,8 @@
 #include "ModelLoader.h"
 #include <vector>
 
-
-
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -62,6 +62,8 @@ bool loadModel(const std::string& filePath, std::vector<GLfloat>& vertices, std:
         return false;
     }
 
+    std::cout << "Loading Asset " << filePath.c_str() << "\n";
+
     const aiMesh* mesh = scene->mMeshes[0]; // Assuming the model has only one mesh
 
     //increases the size of the 3d model
@@ -88,6 +90,35 @@ bool loadModel(const std::string& filePath, std::vector<GLfloat>& vertices, std:
     }
 
     return true;
+}
+
+const int ColourChanels[]{ 0 , GL_R, GL_RG, GL_RGB, GL_RGBA };
+
+void loadTexture(GLuint& texture, std::string texturepath)
+{
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// load image, create texture and generate mipmaps
+	GLint width, height, nrChannels;
+	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
+	unsigned char* data = stbi_load(texturepath.c_str(), &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, ColourChanels[nrChannels], GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		std::cout << "Loaded texture " << texturepath.c_str() << std::endl;
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
 }
 
 int main() {
@@ -127,7 +158,7 @@ int main() {
 
 
     std::vector<GLfloat> roomVertices, roomColors;
-    if (!loadModel("S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/shop.obj", roomVertices, roomColors)) {
+    if (!loadModel("S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/shop2.obj", roomVertices, roomColors)) {
         std::cerr << "Failed to load model" << std::endl;
         glfwTerminate();
         return -1;
@@ -142,6 +173,10 @@ int main() {
  
 
     GLuint shopVAO, shopVBO;
+    GLuint shopTexture;
+
+    loadTexture(shopTexture, "S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/Textures/brick.jpg");
+
     glGenVertexArrays(1, &shopVAO);
     glGenBuffers(1, &shopVBO);
 
@@ -162,6 +197,10 @@ int main() {
     glBindVertexArray(0);
 
     GLuint bonsaiVAO, bonsaiVBO;
+	GLuint bonsaiTexture;
+
+	//loadTexture(bonsaiTexture, "S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/shop2.obj");
+
     glGenVertexArrays(1, &bonsaiVAO);
     glGenBuffers(1, &bonsaiVBO);
 
@@ -263,6 +302,7 @@ int main() {
     glfwSetScrollCallback(window, scroll_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+    // rendering loop 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -303,6 +343,8 @@ int main() {
         glUniformMatrix4fv(roomLoc, 1, GL_FALSE, glm::value_ptr(roommodelMatrix));
         glUniformMatrix4fv(bonsaiLoc, 1, GL_FALSE, glm::value_ptr(plantmodelMatrix));
 
+        
+
         glBindVertexArray(canVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
@@ -327,12 +369,14 @@ int main() {
         wallModel = glm::rotate(wallModel, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "wallModel"), 1, GL_FALSE, glm::value_ptr(wallModel));
 
-
+       
         glBindVertexArray(bonsaiVAO);
         glDrawArrays(GL_TRIANGLES, 0, bonsaiVertices.size() / 3);
         glBindVertexArray(0);
 
         glBindVertexArray(shopVAO);
+        glActiveTexture(0);
+        glBindTexture(GL_TEXTURE_2D, shopTexture);
         glDrawArrays(GL_TRIANGLES, 0, roomVertices.size() / 3);
         glBindVertexArray(0);
 
