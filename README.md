@@ -31,7 +31,7 @@
 
 ## Links
 
-#### YT 
+#### YT [My YT Video](https://youtu.be/zM24yRWyNng))
 #### Github [My GitHub](https://github.com/WillSplaine/COMP3016-OPENGL)
 
 ### External Resource
