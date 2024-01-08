@@ -42,4 +42,5 @@
 
 ### Research Related Citation
 #### I looked into collision for my opengl project and used an article to get a better understanding of what collision detection refers to and how to implement it in my project
-#### The article i read through is [Static collision detection using visualization tool](https://www.sciencedirect.com/science/article/abs/pii/S2214785318322053)
+#### The article I read through is [Static collision detection using visualization tool](https://www.sciencedirect.com/science/article/abs/pii/S2214785318322053)
+#### This game me a base idea for what I wanted to achieve and made the process alot easier
