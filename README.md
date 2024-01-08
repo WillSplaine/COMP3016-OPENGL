@@ -1,5 +1,5 @@
 # COMP3016-OPENGL
-## COMP3016's OpenGL coureswork
+## COMP3016's OpenGL coureswork Overview
 #### My 70% Project was to create a scene in OpenGL, and then to render a bonsai plant ontop of a podium that the player could walk around a view from different angles and zoom into. 
 #### From there to add 2 lights 1- to act as a grow lamp and another to act as the sun/moon depending on ther day cycle. 
 #### If given the opurtunity I would have liked to get the watering can to sit at the bottom of the window at all times and make it so it could be animated and play sound, aswell as adding the day/night cycle lighting however this would have taken alot more work and was very advanced.
@@ -14,6 +14,10 @@
 ### Environment
 #### This project was created using Visual Studios 2022 Community with C++
 
+### Insipration
+#### The main reason I chose to focus on a bonsai model loader was because plants are completely unique to eachother and alot of people enjoy growing/ looking at them especially in bonsai communities
+#### I took alot of inspiration from flower boutiques and mueseums as they have each piece on its own stand which is what i decided to follow
+
 ### Libraries
 #### Please ensure these libraries are in the prokect in order to run the scene as intended
 
@@ -22,6 +26,8 @@
  - ASSIMP
  - STB_IMAGE
  - GLAD
+### Signature
+
 
 ### Links
 
@@ -33,3 +39,7 @@
 #### In this project the use of learnopengl.com was essential in both learning the correct usage for each element 
 
 #### Models for bonsai, shop were both designed by myself via the use of the 3D modelling software Blender
+
+### Research Related Citation
+#### I looked into collision for my opengl project and used an article to get a better understanding of what collision detection refers to and how to implement it in my project
+#### The article i read through is [Static collision detection using visualization tool](https://www.sciencedirect.com/science/article/abs/pii/S2214785318322053)
