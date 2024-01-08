@@ -55,11 +55,11 @@ void renderPodium(GLuint& VAO, GLuint& VBO, GLuint& EBO);
 void renderWall(GLuint& wallVAO, GLuint& wallVBO, GLuint& wallEBO);
 void renderCan(GLuint& canVAO, GLuint& canVBO, GLuint& canEBO);
 
-bool isOutsideArea(const glm::vec3& point);
+
 bool isInsideCube(const glm::vec3& point);
 
 //Model Loading Function
-bool loadModel(const std::string& filePath, std::vector<GLfloat>& vertices, std::vector<GLfloat>& colors) {
+bool loadModel(const std::string& filePath, std::vector<GLfloat>& vertices, std::vector<GLfloat>& colors, std::vector<GLfloat>& texCords) {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs);
 
@@ -91,7 +91,14 @@ bool loadModel(const std::string& filePath, std::vector<GLfloat>& vertices, std:
             // If the model doesn't have colors, you can set a default color here.
             vertices.push_back(1.0f); // Red
             vertices.push_back(1.0f); // Green
-            vertices.push_back(1.0f); // Blue
+			vertices.push_back(1.0f); // Blue
+        }
+
+        if (mesh->HasTextureCoords(0)){
+            aiVector3D texCor = mesh->mTextureCoords[0][i];
+
+			vertices.push_back(texCor[0]);
+			vertices.push_back(texCor[1]);
         }
     }
 
@@ -169,27 +176,26 @@ int main() {
     }
 
     //load room model
-    std::vector<GLfloat> roomVertices, roomColors;
-    if (!loadModel("S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/shop2.obj", roomVertices, roomColors)) {
+    std::vector<GLfloat> roomVertices, roomColors, roomTex;
+    if (!loadModel("S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/shop2.obj", roomVertices, roomColors, roomTex)) {
         std::cerr << "Failed to load model" << std::endl;
         glfwTerminate();
         return -1;
-    }
+	}
 
     //load bonsai model
-    std::vector<GLfloat> bonsaiVertices, bonsaiColors;
-    if (!loadModel("S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/Bonsai.obj", bonsaiVertices, bonsaiColors)) {
+    std::vector<GLfloat> bonsaiVertices, bonsaiColors, bonsaiTex;
+    if (!loadModel("S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/Bonsai.obj", bonsaiVertices, bonsaiColors, bonsaiTex)) {
         std::cerr << "Failed to load model" << std::endl;
         glfwTerminate();
         return -1;
     }
-   
  
     //Create + Load textures for shop model
-    GLuint shopVAO, shopVBO;
-    GLuint shopTexture;
+	GLuint shopVAO, shopVBO;
+	GLuint shopTexture;
 
-    loadTexture(shopTexture, "S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/Textures/brick.jpg");
+	loadTexture(shopTexture, "S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/Textures/brick.jpg");
 
     glGenVertexArrays(1, &shopVAO);
     glGenBuffers(1, &shopVBO);
@@ -200,12 +206,16 @@ int main() {
     glBufferData(GL_ARRAY_BUFFER, roomVertices.size() * sizeof(GLfloat), roomVertices.data(), GL_STATIC_DRAW);
 
     // Vertex attribute for position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
 
     // Vertex attribute for color
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+
+	// Vertex attribute for texture coords
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(3);
 
     // Unbind the VAO to prevent accidental changes
     glBindVertexArray(0);
@@ -215,7 +225,7 @@ int main() {
     GLuint bonsaiVAO, bonsaiVBO;
 	GLuint bonsaiTexture;
 
-	//loadTexture(bonsaiTexture, "S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/shop2.obj");
+	loadTexture(bonsaiTexture, "S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/Textures/tree.jpg");
 
     glGenVertexArrays(1, &bonsaiVAO);
     glGenBuffers(1, &bonsaiVBO);
@@ -226,12 +236,16 @@ int main() {
     glBufferData(GL_ARRAY_BUFFER, bonsaiVertices.size() * sizeof(GLfloat), bonsaiVertices.data(), GL_STATIC_DRAW);
 
     // Vertex attribute for position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
 
     // Vertex attribute for color
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+
+	// Vertex attribute for texture coords
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(3);
 
     // Unbind the VAO to prevent accidental changes
     glBindVertexArray(0);
@@ -386,15 +400,20 @@ int main() {
         wallModel = glm::rotate(wallModel, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "wallModel"), 1, GL_FALSE, glm::value_ptr(wallModel));
 
-       
+
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, bonsaiTexture);
+		glUniform1f(glGetUniformLocation(shaderProgram, "texture_main"), 0);
         glBindVertexArray(bonsaiVAO);
         glDrawArrays(GL_TRIANGLES, 0, bonsaiVertices.size() / 3);
         glBindVertexArray(0);
 
-        glBindVertexArray(shopVAO);
-        glActiveTexture(0);
-        glBindTexture(GL_TEXTURE_2D, shopTexture);
-        glDrawArrays(GL_TRIANGLES, 0, roomVertices.size() / 3);
+        glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, shopTexture);
+		glUniform1f(glGetUniformLocation(shaderProgram, "texture_main"), 0);
+		glBindVertexArray(shopVAO);
+        glDrawArrays(GL_TRIANGLES, 0, roomVertices.size());
         glBindVertexArray(0);
 
         //swap buffer and polls events

@@ -5,6 +5,7 @@ const char* vertexShaderSource = R"(
  layout (location = 0) in vec3 aPos;
  layout (location = 1) in vec3 aColor; // Added color attribute
  layout (location = 2) in vec3 aNormal; // Added normal attribute
+ layout (location = 3) in vec2 textVert; // Texture Vertexes
 
  uniform mat4 model;
  uniform mat4 view;
@@ -13,6 +14,7 @@ const char* vertexShaderSource = R"(
  out vec3 FragPos; // Pass position to fragment shader
  out vec3 Normal; // Pass normal to fragment shader
  out vec3 Color; // Pass color to fragment shader
+ out vec2 textFrag;
 
  void main()
  {
@@ -20,6 +22,7 @@ const char* vertexShaderSource = R"(
      FragPos = vec3(model * vec4(aPos, 1.0));
      Normal = mat3(transpose(inverse(model))) * aNormal;
      Color = aColor;
+     textFrag = textVert;
  }
 )";
 // Frag shader source code
@@ -28,11 +31,13 @@ const char* fragmentShaderSource = R"(
 in vec3 FragPos; // Received position from vertex shader
 in vec3 Normal; // Received normal from vertex shader
 in vec3 Color; // Received color from vertex shader
+in vec2 textFrag;
 
 out vec4 FragColorOutput;
 
 uniform vec3 lightPos; // Position of the light source
 uniform vec3 viewPos; // Position of the camera/viewer
+uniform sampler2D texture_main;
 
 void main()
 {
@@ -54,6 +59,7 @@ void main()
 
     // Final color
     vec3 result = ambient + diffuse + specular;
-    FragColorOutput = vec4(result, 1.0);
+    FragColorOutput = texture(texture_main, textFrag) * vec4(result, 1.0);
+    //FragColorOutput = texture(texture_main, textFrag);
 }
 )";
