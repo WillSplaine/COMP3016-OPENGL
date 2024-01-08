@@ -6,6 +6,7 @@
 
 ### Run the Project
 #### To run, open the Comp3016Remake.sln found in the GitHub, and run the project.
+#### Or open the Game folder inside the Submission Folder, double click the exe file.
 
 #### To move around the the use of the W,A,S,D keys will allow you to move in each direation (W = Forward, A = Left, S = Backwards, D = Right) These movements can be used at the same time to achieve a combination AKA W+A = 45 degrees forward
 #### To look around, the use of the mouse allows the player to look wherever they wish
@@ -17,6 +18,8 @@
 ### Insipration
 #### The main reason I chose to focus on a bonsai model loader was because plants are completely unique to eachother and alot of people enjoy growing/ looking at them especially in bonsai communities
 #### I took alot of inspiration from flower boutiques and mueseums as they have each piece on its own stand which is what i decided to follow
+#### I noticed that there wasnt any other bonsai games recently and wanted to try my hand at making that happen the most popular one i can think of is Tree Bonsai on steam
+#### I started from scratch and used LearnOpenGL.com for inspiration on starting this project
 
 ### Libraries
 #### Please ensure these libraries are in the prokect in order to run the scene as intended
