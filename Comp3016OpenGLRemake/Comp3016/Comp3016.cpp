@@ -1,3 +1,4 @@
+//necessary libraries
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -14,9 +15,11 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+// variables for camera + time
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+//camera parameters
 float fov = 125.0f;
 float cameraSpeed = 2.5f;
 float cameraZoomSpeed = 2.0f;
@@ -31,17 +34,19 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::mat4 view;
 glm::mat4 projection;
 
+//lighting parameters
 glm::vec3 lightDirection(-1.0f, -1.0f, -1.0f); // Directional light from the top-left
 glm::vec3 lightAmbient(0.2f, 0.2f, 0.2f);
 
 double lastX = 400, lastY = 300;
 bool firstMouse = true;
 
+//GLFW window and shader program
 GLFWwindow* window;
 GLuint shaderProgram;
 
 
-
+//Functions
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -53,6 +58,7 @@ void renderCan(GLuint& canVAO, GLuint& canVBO, GLuint& canEBO);
 bool isOutsideArea(const glm::vec3& point);
 bool isInsideCube(const glm::vec3& point);
 
+//Model Loading Function
 bool loadModel(const std::string& filePath, std::vector<GLfloat>& vertices, std::vector<GLfloat>& colors) {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -91,9 +97,10 @@ bool loadModel(const std::string& filePath, std::vector<GLfloat>& vertices, std:
 
     return true;
 }
-
+// Number of Colour Channels to OpenGL
 const int ColourChanels[]{ 0 , GL_R, GL_RG, GL_RGB, GL_RGBA };
 
+//Load Texture Function
 void loadTexture(GLuint& texture, std::string texturepath)
 {
 	glGenTextures(1, &texture);
@@ -122,33 +129,38 @@ void loadTexture(GLuint& texture, std::string texturepath)
 }
 
 int main() {
-
+    //Setting scrollback function
     glfwSetScrollCallback(window, scroll_callback);
 
+    //Initialize GLFW
     if (!glfwInit()) {
         std::cerr << "GLFW initialization failed\n";
         return -1;
     }
-
+    //Configure GLFW window properties
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    //Create GLFW window
     window = glfwCreateWindow(800, 600, "OpenGL Cube and Camera Movement", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window\n";
         glfwTerminate();
         return -1;
     }
-
+    //Sets current context to window
     glfwMakeContextCurrent(window);
+
+    //Set framebuffer size for viewport adjustment
     glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
         glViewport(0, 0, width, height);
         });
 
-    // Enable depth testing
+    // Enable depth testing for better rendering
     glEnable(GL_DEPTH_TEST);
 
+    //Initialize GLEW
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         std::cerr << "GLEW initialization failed\n";
@@ -156,13 +168,15 @@ int main() {
         return -1;
     }
 
-
+    //load room model
     std::vector<GLfloat> roomVertices, roomColors;
     if (!loadModel("S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/shop2.obj", roomVertices, roomColors)) {
         std::cerr << "Failed to load model" << std::endl;
         glfwTerminate();
         return -1;
     }
+
+    //load bonsai model
     std::vector<GLfloat> bonsaiVertices, bonsaiColors;
     if (!loadModel("S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/Bonsai.obj", bonsaiVertices, bonsaiColors)) {
         std::cerr << "Failed to load model" << std::endl;
@@ -171,7 +185,7 @@ int main() {
     }
    
  
-
+    //Create + Load textures for shop model
     GLuint shopVAO, shopVBO;
     GLuint shopTexture;
 
@@ -180,8 +194,8 @@ int main() {
     glGenVertexArrays(1, &shopVAO);
     glGenBuffers(1, &shopVBO);
 
+    //Setup VAO for room model
     glBindVertexArray(shopVAO);
-
     glBindBuffer(GL_ARRAY_BUFFER, shopVBO);
     glBufferData(GL_ARRAY_BUFFER, roomVertices.size() * sizeof(GLfloat), roomVertices.data(), GL_STATIC_DRAW);
 
@@ -196,6 +210,8 @@ int main() {
     // Unbind the VAO to prevent accidental changes
     glBindVertexArray(0);
 
+
+    //create + Load textures for bonsai model
     GLuint bonsaiVAO, bonsaiVBO;
 	GLuint bonsaiTexture;
 
@@ -204,8 +220,8 @@ int main() {
     glGenVertexArrays(1, &bonsaiVAO);
     glGenBuffers(1, &bonsaiVBO);
 
+    //set up VAO for bonsai model
     glBindVertexArray(bonsaiVAO);
-
     glBindBuffer(GL_ARRAY_BUFFER, bonsaiVBO);
     glBufferData(GL_ARRAY_BUFFER, bonsaiVertices.size() * sizeof(GLfloat), bonsaiVertices.data(), GL_STATIC_DRAW);
 
@@ -302,15 +318,16 @@ int main() {
     glfwSetScrollCallback(window, scroll_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    // rendering loop 
+    // Main rendering loop 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
+        //Process input from processInput function - Handles wasd and mouse
         processInput(window);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        //clears screen and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
@@ -380,6 +397,7 @@ int main() {
         glDrawArrays(GL_TRIANGLES, 0, roomVertices.size() / 3);
         glBindVertexArray(0);
 
+        //swap buffer and polls events
         glfwSwapBuffers(window);
         glfwPollEvents();
 
@@ -391,6 +409,7 @@ int main() {
     glDeleteBuffers(1, &EBO);
     glDeleteProgram(shaderProgram);
 
+    //cleans and exits
     glfwTerminate();
     return 0;
 
@@ -456,16 +475,19 @@ void renderPodium(GLuint& podiumVAO, GLuint& podiumVBO, GLuint& podiumEBO) {
         20, 21, 22,
         22, 23, 20
     };
-
+    //Creates VAO,VBO + EBO for podium
     glGenVertexArrays(1, &podiumVAO);
     glGenBuffers(1, &podiumVBO);
     glGenBuffers(1, &podiumEBO);
 
+    //Binds VAO to get VBO + EBO configs
     glBindVertexArray(podiumVAO);
 
+    //Bind and populate the VBO with vertex data
     glBindBuffer(GL_ARRAY_BUFFER, podiumVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(podiumVertices), podiumVertices, GL_STATIC_DRAW);
 
+    //Bind and fill the EBO with element index data
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, podiumEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(podiumIndices), podiumIndices, GL_STATIC_DRAW);
 
@@ -476,6 +498,7 @@ void renderPodium(GLuint& podiumVAO, GLuint& podiumVBO, GLuint& podiumEBO) {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); // Color attribute
     glEnableVertexAttribArray(1);
 
+    // Unbinds VBO and VAO to prevent accidental changes
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
@@ -550,26 +573,31 @@ void renderCan(GLuint& canVAO, GLuint& canVBO, GLuint& canEBO) {
 
 
     };
-
+    //Creates VAO,VBO + EBO for watering can
     GLuint VBO, VAO, EBO;
     glGenVertexArrays(1, &canVAO);
     glGenBuffers(1, &canVBO);
     glGenBuffers(1, &canEBO);
 
+    //Binds VAO to get VBO + EBO configs
     glBindVertexArray(canVAO);
 
+    //Bind and populate the VBO with vertex data
     glBindBuffer(GL_ARRAY_BUFFER, canVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(canVertices), canVertices, GL_STATIC_DRAW);
 
+    //Bind and populate the EBO with element index data
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, canEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(canIndices), canIndices, GL_STATIC_DRAW);
 
+    //Defines vertex Attribs
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0); // Position attribute
     glEnableVertexAttribArray(0);
 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); // Color attribute
     glEnableVertexAttribArray(1);
 
+    //Unbinds VBO + VAO to prevent accidental changes
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
@@ -639,50 +667,67 @@ void renderWall(GLuint& wallVAO, GLuint& wallVBO, GLuint& wallEBO) {
         22, 23, 20
     };
 
+    //Creates VAO,VBO + EBO for wall
     GLuint VBO, VAO, EBO;
     glGenVertexArrays(1, &wallVAO);
     glGenBuffers(1, &wallVBO);
     glGenBuffers(1, &wallEBO);
 
+    //Binds VAO to get VBO + EBO configs
     glBindVertexArray(wallVAO);
 
+    //Bind and populate the VBO with vertex data
     glBindBuffer(GL_ARRAY_BUFFER, wallVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(wallVertices), wallVertices, GL_STATIC_DRAW);
 
+    //Bind and populate the VBO with element index data
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, wallEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(wallIndices), wallIndices, GL_STATIC_DRAW);
 
+    //Defines vertex Attribs
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0); // Position attribute
     glEnableVertexAttribArray(0);
 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); // Color attribute
     glEnableVertexAttribArray(1);
 
+    //Unbinds VBO + VAO to prevent accidental changes
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
 
+//callback function handles scroll events
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
+    //Adjusts fov depends on scroll offset
     fov -= (float)yoffset;
+
+    //makes sure fov stays within appropriate range
     if (fov < 1.0f)
         fov = 1.0f;
     if (fov > 45.0f)
         fov = 45.0f;
-
+    //Updates projection matrix for now FOV
     projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
+    //resets function
     glfwSetScrollCallback(window, scroll_callback);
 }
 
+//processes users input mouse + wasd for camera movement
 void processInput(GLFWwindow* window) {
+    
+    //close window on esc
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
+    //set starting camera speed and calculate updated camera speed 
     float baseCameraSpeed = 2.25f;
     float modifiedCameraSpeed = baseCameraSpeed * deltaTime / 3.0f;
 
-    glm::vec3 newCameraPos = cameraPos;  // Store the new position for collision detection
+    //store new cam pos for collision detection
+    glm::vec3 newCameraPos = cameraPos;  
 
+    //move camera based on wasd input
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         newCameraPos += modifiedCameraSpeed * cameraFront;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -693,7 +738,7 @@ void processInput(GLFWwindow* window) {
         newCameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * modifiedCameraSpeed;
 
 
-    // Check if the new position is inside the cube
+    // Check if the new position is inside the podiums buffer zone
     if (!isInsideCube(newCameraPos)) {
         // Update the camera position only if it's not inside the cube
         cameraPos = newCameraPos;
@@ -702,7 +747,7 @@ void processInput(GLFWwindow* window) {
     // Ensure the camera stays at the same height
     cameraPos.y = 0.0f;
 }
-
+//function to prevent entry into podium - ensures no clipping 
 bool isInsideCube(const glm::vec3& point) {
     // Defines where the cube is and adds a buffer to prevent clipping)
     float buffer = -0.35f;  // Adjust the buffer 
@@ -713,7 +758,7 @@ bool isInsideCube(const glm::vec3& point) {
     float cubeMinZ = -0.5f - buffer;
     float cubeMaxZ = 0.5f + buffer;
    
-    
+    //creates inverse model matrix to make point into local space
     glm::mat4 inverseModelMatrix = glm::inverse(glm::mat4(1.0f));  
 
     // Transform the camera position into local space
@@ -726,43 +771,31 @@ bool isInsideCube(const glm::vec3& point) {
 }
 
 
-bool isOutsideArea(const glm::vec3& point) {
-    // Define the boundaries of the allowed area
-    float areaMinX = -1;
-    float areaMaxX = 1; /* Set your maximum X value */;
-    float areaMinY = -1/* Set your minimum Y value */;
-    float areaMaxY = 1/* Set your maximum Y value */;
-    float areaMinZ = 1/* Set your minimum Z value */;
-    float areaMaxZ = 1/* Set your maximum Z value */;
-
-    // Transform the point into local space (if needed)
-    glm::mat4 inverseModelMatrix = glm::inverse(glm::mat4(1.0f));
-    glm::vec4 localPoint = inverseModelMatrix * glm::vec4(point, 1.0f);
-
-    // Check if the point is outside the allowed area
-    return (localPoint.x < areaMinX || localPoint.x > areaMaxX ||
-        localPoint.y < areaMinY || localPoint.y > areaMaxY ||
-        localPoint.z < areaMinZ || localPoint.z > areaMaxZ);
-}
-
-
+//call back function for handling mouse movement
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+    //finds if is first mouse movement
     if (firstMouse) {
+        //sets initial mouse coords
         lastX = xpos;
         lastY = ypos;
         firstMouse = false;
     }
-
+    // calculate change in mouse movement
     float xoffset = xpos - lastX;
     float yoffset = lastY - ypos;
 
+    //updates last mouse movemnent
     lastX = xpos;
     lastY = ypos;
 
+    // sets sens for mouse
     float sensitivity = 0.05f;
+
+    //apply sens to mouse offset
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
+    //adjust yaw and pitch based on mouse movement
     yaw += xoffset;
     pitch += yoffset;
 
@@ -772,17 +805,21 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     if (pitch < -89.0f)
         pitch = -89.0f;
 
+    //updates cam vectors
     updateCameraVectors();
 }
 
 
-
+//updates camera front vector based on current yaw and pitch angle
 void updateCameraVectors() {
     // Calculate the new Front vector
     glm::vec3 front;
+
+    //calculate xyz based on yaw and pitch angles
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    //normalize the end vector to ensure unit
     cameraFront = glm::normalize(front);
 }
 

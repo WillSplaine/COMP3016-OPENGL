@@ -1,5 +1,5 @@
 #pragma once
-
+//vert shader source code
 const char* vertexShaderSource = R"(
    #version 330 core
  layout (location = 0) in vec3 aPos;
@@ -22,7 +22,7 @@ const char* vertexShaderSource = R"(
      Color = aColor;
  }
 )";
-
+// Frag shader source code
 const char* fragmentShaderSource = R"(
     #version 330 core
 in vec3 FragPos; // Received position from vertex shader
