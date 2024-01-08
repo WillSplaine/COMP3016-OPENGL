@@ -1,0 +1,61 @@
+﻿Comp3016.obj : error LNK2001: unresolved external symbol glfwSwapBuffers
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewEnableVertexAttribArray
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewBindVertexArray
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewUseProgram
+Comp3016.obj : error LNK2001: unresolved external symbol glfwSetFramebufferSizeCallback
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glViewport
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewVertexAttribPointer
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glClear
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewGetShaderiv
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewCompileShader
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewCreateShader
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewBindBuffer
+Comp3016.obj : error LNK2001: unresolved external symbol glfwGetTime
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewCreateProgram
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glBindTexture
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glGenTextures
+Comp3016.obj : error LNK2001: unresolved external symbol glfwGetKey
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glEnable
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewGetShaderInfoLog
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewGetProgramiv
+Comp3016.obj : error LNK2001: unresolved external symbol glfwTerminate
+Comp3016.obj : error LNK2001: unresolved external symbol glfwPollEvents
+Comp3016.obj : error LNK2001: unresolved external symbol glfwInit
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewDeleteVertexArrays
+Comp3016.obj : error LNK2001: unresolved external symbol glfwSetWindowShouldClose
+Comp3016.obj : error LNK2001: unresolved external symbol glfwSetScrollCallback
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewUniform1f
+Comp3016.obj : error LNK2001: unresolved external symbol glfwCreateWindow
+Comp3016.obj : error LNK2001: unresolved external symbol glfwWindowHint
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewGetUniformLocation
+Comp3016.obj : error LNK2001: unresolved external symbol glfwSetInputMode
+Comp3016.obj : error LNK2001: unresolved external symbol glfwMakeContextCurrent
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewBufferData
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glTexParameteri
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewAttachShader
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewActiveTexture
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewDeleteProgram
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewShaderSource
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewGenVertexArrays
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glClearColor
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glDrawArrays
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewUniformMatrix4fv
+Comp3016.obj : error LNK2001: unresolved external symbol "public: char const * __cdecl Assimp::Importer::GetErrorString(void)const " (?GetErrorString@Importer@Assimp@@QEBAPEBDXZ)
+Comp3016.obj : error LNK2001: unresolved external symbol "public: struct aiScene const * __cdecl Assimp::Importer::ReadFile(char const *,unsigned int)" (?ReadFile@Importer@Assimp@@QEAAPEBUaiScene@@PEBDI@Z)
+Comp3016.obj : error LNK2001: unresolved external symbol "public: __cdecl Assimp::Importer::~Importer(void)" (??1Importer@Assimp@@QEAA@XZ)
+Comp3016.obj : error LNK2001: unresolved external symbol "public: __cdecl Assimp::Importer::Importer(void)" (??0Importer@Assimp@@QEAA@XZ)
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glTexImage2D
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glewExperimental
+Comp3016.obj : error LNK2001: unresolved external symbol glfwSetCursorPosCallback
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewGetProgramInfoLog
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glDrawElements
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewGenBuffers
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewGenerateMipmap
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glDisable
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewDeleteShader
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewLinkProgram
+Comp3016.obj : error LNK2001: unresolved external symbol glfwWindowShouldClose
+Comp3016.obj : error LNK2001: unresolved external symbol __imp_glewInit
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewDeleteBuffers
+Comp3016.obj : error LNK2001: unresolved external symbol __imp___glewUniform3fv
+S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Comp3016\x64\Release\Comp3016.exe : fatal error LNK1120: 60 unresolved externals

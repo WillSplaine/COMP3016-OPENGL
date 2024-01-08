@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\Assimp\Assimp\include;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLFW\include;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLEW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLEW\lib\Release\x64;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\Assimp\include\assimp;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLFW\lib-static-ucrt;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLFW\lib-mingw-w64;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLFW\lib-vc2022;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Public\OPENGL\Dependencies\Assimp\Assimp\include;C:\Users\Public\OPENGL\Dependencies\GLFW\include;C:\Users\Public\OPENGL\Dependencies\GLEW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Public\OPENGL\Dependencies\GLEW\lib\Release\x64;C:\Users\Public\OPENGL\Dependencies\Assimp\include\assimp;C:\Users\Public\OPENGL\Dependencies\GLFW\lib-mingw-w64;C:\Users\Public\OPENGL\Dependencies\GLFW\lib-static-ucrt;C:\Users\Public\OPENGL\Dependencies\GLFW\lib-vc2022;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\Assimp\Assimp\include;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLFW\include;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLEW\include;$(IncludePath)</IncludePath>
@@ -112,12 +112,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLFW\include;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLM;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLEW\include;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\Assimp\include;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Public\OPENGL\Dependencies\stb;C:\Users\Public\OPENGL\Dependencies\Assimp\include;C:\Users\Public\OPENGL\Dependencies\GLEW\include;C:\Users\Public\OPENGL\Dependencies\GLM;C:\Users\Public\OPENGL\Dependencies\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLFW\lib-vc2022;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLFW\lib-static-ucrt;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLFW\lib-mingw-w64;S:\3rd Year CW\Comp3016\CW2\COMP3016-OPENGL\Comp3016OpenGLRemake\Dependencies\GLEW\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Public\OPENGL\Dependencies\GLEW\lib\Release\x64;C:\Users\Public\OPENGL\Dependencies\GLFW\lib-mingw-w64;C:\Users\Public\OPENGL\Dependencies\GLFW\lib-static-ucrt;C:\Users\Public\OPENGL\Dependencies\GLFW\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glew32.lib;glfw3.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

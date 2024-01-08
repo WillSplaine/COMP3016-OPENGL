@@ -8,8 +8,10 @@
 #include <Assimp\Importer.hpp>
 #include <Assimp/scene.h>
 #include <Assimp/postprocess.h>
+
 #include "Shader.h"
 #include "ModelLoader.h"
+
 #include <vector>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -150,7 +152,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     //Create GLFW window
-    window = glfwCreateWindow(800, 600, "OpenGL Cube and Camera Movement", nullptr, nullptr);
+    window = glfwCreateWindow(800, 600, "OpenGL Bonsai Model Loader", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window\n";
         glfwTerminate();
@@ -194,7 +196,7 @@ int main() {
     //Create + Load textures for shop model
 	GLuint shopVAO, shopVBO;
 	GLuint shopTexture;
-
+    //load texture for bonsai model from file path
 	loadTexture(shopTexture, "../Models/Textures/brick.jpg");
 
     glGenVertexArrays(1, &shopVAO);
@@ -224,7 +226,8 @@ int main() {
     //create + Load textures for bonsai model
     GLuint bonsaiVAO, bonsaiVBO;
 	GLuint bonsaiTexture;
-
+    
+    //load texture for bonsai model from filepath
 	loadTexture(bonsaiTexture, "../Models/Textures/tree.jpg");
 
     glGenVertexArrays(1, &bonsaiVAO);
@@ -250,11 +253,12 @@ int main() {
     // Unbind the VAO to prevent accidental changes
     glBindVertexArray(0);
 
-
+    //cleanup Bindings and configs
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     glDisable(GL_CULL_FACE);
-
+    
+    //compile and link shaders
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
     glCompileShader(vertexShader);
@@ -268,7 +272,7 @@ int main() {
         glfwTerminate();
         return -1;
     }
-
+    
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
     glCompileShader(fragmentShader);
@@ -281,11 +285,12 @@ int main() {
         return -1;
     }
 
+    //create and link shader program
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
-
+    //check for shader program link errors
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
@@ -295,7 +300,7 @@ int main() {
     }
 
 
-
+    //clean up shader objects after linking
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
@@ -334,6 +339,7 @@ int main() {
 
     // Main rendering loop 
     while (!glfwWindowShouldClose(window)) {
+        //calculate time related values for clean motion
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -344,6 +350,7 @@ int main() {
         //clears screen and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        //Use shader for rendering
         glUseProgram(shaderProgram);
 
         // Update view matrix
@@ -369,7 +376,7 @@ int main() {
 
         glm::mat4 roommodelMatrix = glm::translate(glm::mat4(-1.0f), glm::vec3(1.0f, 2.0f, 1.0f));
         glm::mat4 plantmodelMatrix = glm::translate(glm::mat4(-1.0f), glm::vec3(2.0f, 1.0f, 2.0f));
-        glm::mat4 bonsaiplantMatrix = glm::translate(glm::mat4(-1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+        
 
         glUniformMatrix4fv(roomLoc, 1, GL_FALSE, glm::value_ptr(roommodelMatrix));
         glUniformMatrix4fv(bonsaiLoc, 1, GL_FALSE, glm::value_ptr(plantmodelMatrix));
@@ -401,10 +408,11 @@ int main() {
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "wallModel"), 1, GL_FALSE, glm::value_ptr(wallModel));
 
 
-
+        //activate and bind textures for both models
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, bonsaiTexture);
 		glUniform1f(glGetUniformLocation(shaderProgram, "texture_main"), 0);
+        //render bonsai model
         glBindVertexArray(bonsaiVAO);
         glDrawArrays(GL_TRIANGLES, 0, bonsaiVertices.size() / 3);
         glBindVertexArray(0);
@@ -412,6 +420,7 @@ int main() {
         glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, shopTexture);
 		glUniform1f(glGetUniformLocation(shaderProgram, "texture_main"), 0);
+        //render shop model
 		glBindVertexArray(shopVAO);
         glDrawArrays(GL_TRIANGLES, 0, roomVertices.size());
         glBindVertexArray(0);
