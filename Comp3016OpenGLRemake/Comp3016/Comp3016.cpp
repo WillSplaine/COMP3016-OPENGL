@@ -177,7 +177,7 @@ int main() {
 
     //load room model
     std::vector<GLfloat> roomVertices, roomColors, roomTex;
-    if (!loadModel("S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/shop2.obj", roomVertices, roomColors, roomTex)) {
+    if (!loadModel("../Models/shop2.obj", roomVertices, roomColors, roomTex)) {
         std::cerr << "Failed to load model" << std::endl;
         glfwTerminate();
         return -1;
@@ -185,7 +185,7 @@ int main() {
 
     //load bonsai model
     std::vector<GLfloat> bonsaiVertices, bonsaiColors, bonsaiTex;
-    if (!loadModel("S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/Bonsai.obj", bonsaiVertices, bonsaiColors, bonsaiTex)) {
+    if (!loadModel("../Models/Bonsai.obj", bonsaiVertices, bonsaiColors, bonsaiTex)) {
         std::cerr << "Failed to load model" << std::endl;
         glfwTerminate();
         return -1;
@@ -195,7 +195,7 @@ int main() {
 	GLuint shopVAO, shopVBO;
 	GLuint shopTexture;
 
-	loadTexture(shopTexture, "S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/Textures/brick.jpg");
+	loadTexture(shopTexture, "../Models/Textures/brick.jpg");
 
     glGenVertexArrays(1, &shopVAO);
     glGenBuffers(1, &shopVBO);
@@ -225,7 +225,7 @@ int main() {
     GLuint bonsaiVAO, bonsaiVBO;
 	GLuint bonsaiTexture;
 
-	loadTexture(bonsaiTexture, "S:/3rd Year CW/Comp3016/CW2/COMP3016-OPENGL/Comp3016OpenGL/Models/Textures/tree.jpg");
+	loadTexture(bonsaiTexture, "../Models/Textures/tree.jpg");
 
     glGenVertexArrays(1, &bonsaiVAO);
     glGenBuffers(1, &bonsaiVBO);
